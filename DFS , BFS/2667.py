@@ -27,9 +27,6 @@ def bfs (start):
     return 1
 
 
-
-
-
 testCase = int(sys.stdin.readline())
 group = 0
 count_box = []

@@ -11,39 +11,42 @@
 
 import sys
 import heapq
+import sys
+
 MAX = 1e20
-testCase = int(input())
+testCase = int(sys.stdin.readline())
+
 for t in range(testCase):
     airport , money , info = map(int,sys.stdin.readline().split())
 
 
-    #시간 초기화
-    T = [MAX]*airport
-    T[0]=0
-
+    Time = [MAX for _ in range(airport)]
+    graph = [[] for _ in range(airport)]
     All = [[] for _ in range(airport)]
 
-    # s : start / e : end / c :consume money / time
-    graph = [[] for _ in range(airport)]
     for i in range(info):
+        # s : start / e : end / c :consume money / time
         s, e, c, time = map(int,sys.stdin.readline().split())
         graph[s].append([time,c,e])
 
-# q append form : time, cost, end
 def dijkstra():
     q = []
+    # q append form : time, cost, end
     q.append([0,0,0])
 
     while q:
         time , cost , ed = heapq.heappop(q)
 
-        #graph에는 [time, cost, ed] 순으로 되어있다.
-        for nTime,nCost,nEd in graph[ed]:
-          nTime += time
-          if T[nEd] > nTime:
-              T[nEd] = nTime
-              nCost += cost
-              heapq.heappush(q,[nTime,nCost,ed])
+        for nTime , nCost , nEd in graph[ed]:
+            nTime += time
+            nCost += cost
+            if (nTime > Time[time]):
+                Time[nEd] = nTime
+                All[nEd].append([nTime,nCost])
+                heapq.heappush(q,[nTime,nCost,nEd])
+
+
+
 
 
 

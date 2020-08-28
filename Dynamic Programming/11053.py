@@ -1,23 +1,21 @@
-# 11053 가장 긴 증가하는 부분수열
-import sys
+#11053 가장긴
 
-seqLength = int(input())
-seq = [int(i) for i in input().split()]
+length = int(input())
+seq = list(map(int,input().split()))
 
-# 완전 탐색
-def solve(arr):
-    # 기저 사례 (하나도 없는 경우)
-    if len(arr) == 0:
-        return 0
-    #기본으로 0으로 준 후에...
-    length = 0
-    for i in range(len(arr)):
-        tmpArr = []
-        for j in range(i+1,len(arr)):
-            if arr[i] < arr[j] :
-                tmpArr.append(arr[j])
-        length = max(length, solve(arr)+1)
-    return length
+seq = [-1e20] + seq
+dp = [-1]*(length+1)
 
-solve(seq)
+def solve (start):
+    if dp[start] != -1:
+        return dp[start]
 
+    dp[start] = 1
+    for next in range(start+1,length+1):
+        if seq[next] > seq[start]:
+            dp[start] = max(dp[start],solve(next)+1)
+
+    return dp[start]
+
+solve(0)
+print(max(dp)-1)

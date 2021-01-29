@@ -11,18 +11,13 @@ seq = []
 for i in range(1,people+1):
     q.append(i)
 
-while(len(q) > nth):
-
+while(q):
     for i in range(nth):
         tmp = q.popleft()
         q.append(tmp)
     ele = q.popleft()
     seq.append(str(ele))
 
-    print(seq)
-    print(q)
-for i in q:
-    seq.append(str(i))
 result = "<" + ", ".join(seq) + ">"
 
 print(result)

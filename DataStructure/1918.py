@@ -1,37 +1,34 @@
 # 1918 후위 표기식
+
 def sol():
-    priority = {"*":1,"/":1,"+":2,"-":2,"(" : 3}
-    operator = ["+","*","/","-","(",")"]
-    stack = []
-    answer = ""
-
+    priority = {"*":1,"/":1,"-":2,"+":2}
+    stack =[]
     exp = input()
-
+    answer =''
     for i in range(len(exp)):
-        if exp[i] not in operator:
+        if 65<= ord(exp[i]) <=122:
             answer += exp[i]
-        # 연산자일 때
-        elif exp[i] in operator:
-            # 아무것도 들어있지 않다면 곧바로 넣는다. (잘못된 식이 없다고 가정하면)
+        elif exp[i] == "(":
+            stack.append(exp[i])
+        elif exp[i] == ")":
+            # 올바른 식만 나온다는 가정하
+            while(stack[-1]!= "("):
+                answer += stack.pop()
+            # "(" 빼자
+            stack.pop()
+        else:
             if len(stack) == 0 :
                 stack.append(exp[i])
 
-            elif exp[i] == "(":
+            elif stack[-1] =="(" or priority[stack[-1]] >= priority[exp[i]]:
                 stack.append(exp[i])
 
-            elif exp[i] == ")":
-                while(stack and stack[-1] != "("):
+            elif priority[stack[-1]] < priority[exp[i]]:
+                while(1):
                     answer += stack.pop()
-                stack.pop()
-        else:
-            while stack and priority[exp[i]] >= priority[stack[-1]]:
-                answer += stack.pop()
-            stack.append(exp[i])
-
+                    if len(stack) == 0 or priority[stack[-1]] > priority[exp[i]]:
+                        break
     while(stack):
         answer += stack.pop()
-
-
-
     return answer
 print(sol())

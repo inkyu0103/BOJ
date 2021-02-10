@@ -17,6 +17,7 @@ def sol():
                 stack[line].append(plat)
                 answer += 1
             else:
+                # 스택이 안 비었으니 여기로 왔다.
                 if stack[line][-1] > plat :
                     while stack[line] and stack[line][-1] > plat:
                         stack[line].pop()
@@ -27,8 +28,14 @@ def sol():
                         stack[line].append(plat)
                         answer += 1
 
-                    elif stack[line] < plat :
+                    elif stack[line][-1] < plat :
                         stack[line].append(plat)
                         answer += 1
+                elif stack[line][-1] < plat:
+                    stack[line].append(plat)
+                    answer += 1
+
         except:
+            print(answer)
             return
+sol()

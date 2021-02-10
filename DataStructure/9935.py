@@ -1,38 +1,37 @@
 # 9935 문자열 폭발
 
-
 def sol():
-    userData = input()
-    boom = input()
-    textCheck = boom[-1]
-    textCheckLength = len(textCheck)
+    userInput = input()
+    boomWord = input()
+
+    boomWordLength = len(boomWord)
+    lastWord = boomWord[-1]
     stack = []
-    answer = ''
 
-    for i in range(len(userData)):
-        if userData[i] not in  boom:
-            answer+=userData[i]
-        # 마지막 단어일 때
+    for c in userInput:
+        if c != lastWord:
+            stack.append(c)
+
         else:
-            if userData[i] == textCheck:
-                try:
-                    # 정상적으로 다 있을 때
-                    if stack[-textCheck:] == boom[:-1]:
-                        for i in range(textCheckLength):
-                            stack.pop()
-                    # 같지 않을 때
-                    else:
-                        for i in range(textCheckLength):
-                            answer += stack.pop()
-                        answer += textCheck
+            try:
 
-                # stack의 범위가 문제가 있을 때.
-                except:
-                    stacklen = len(stack)
-                    for i in range(stacklen):
-                        answer += stack.pop()
-                    answer += textCheck
-            else:
-                stack.append(userData[i])
-    print(answer)
-sol()
+                # 맞는 경우 --> pop 왜 boomWord가 None으로 취급되지?
+                if "".join(stack[-boomWordLength:]) == boomWord[:-1]:
+                    for i in range(boomWordLength):
+                        stack.pop()
+                # 다른 경우
+                else:
+                    stack.append(c)
+
+            except:
+                # 인덱스 에러
+                stack.append(c)
+
+
+    if len(stack) == 0:
+        return "FRULA"
+    else:
+        return "".join(stack)
+
+
+print(sol())

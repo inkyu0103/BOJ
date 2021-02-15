@@ -1,46 +1,41 @@
 # 2812
 
 def sol():
+    # N개중 K개를 빼는 것. 따라서  COUNT가 K가 되면 더 이상 빠지는 것 없이 추가.
     N,K = map(int,input().split())
     user_input = input()
     stack =[]
     count = 0
 
-    for i in range(len(user_input)):
-        # 스택이 빈 경우에는 추가
-        if count == K:
-            stack.append(user_input[i])
+    for i in user_input:
+        # 스택이 비었다면?
+        if len(stack) == 0:
+            stack.append(i)
 
-        else:
-            if len(stack) == 0 :
-                stack.append(user_input[i])
+        # 스택의 마지막이 현재 대상보다 작거나 같다면?
+        elif int(stack[-1]) < int(i):
+            while stack and int(stack[-1]) < int(i) and count != K:
+                stack.pop()
+                count += 1
+            stack.append(i)
 
-            # 스택의 마지막이 현재 대상보다 작거나 작은 경우
-            elif int(stack[-1]) > int(user_input[i]):
-                stack.append(user_input[i])
 
-            # 스택의 마지막이 현재 대상보다 큰 경우 --> else 처리하면 어떻게 되지
-            elif int(stack[-1]) <= int(user_input[i]):
-                while(1):
-                    stack.pop()
-                    count += 1
-                    # 이 부분을 고려 못했네;
-                    if len(stack) == 0:
-                        stack.append(user_input[i])
-                        break
 
-                    elif int(stack[-1]) > int(user_input[i]):
-                        stack.append(user_input[i])
-                        break
+        # 스택의 마지막이 더 큰 경우
+        elif int(stack[-1]) >= int(i):
+            stack.append(i)
 
-                    elif count == K :
-                        stack.append(user_input[i])
-                        break
+        '''
+            근데 이럴 때 문제는 98765 (5,2) 이렇게 되면 뺄 대상이 없다는 것임. 그냥 계속 추가만 하게됨.
+            그럼 맨 마지막에 count가 도달하지 않으면 그 개수만큼 빼주면 되려나?
+        '''
 
+    if count != K:
+        while(count != K):
+            stack.pop()
+            count += 1
 
 
     print("".join(stack))
-
-
 sol()
 

@@ -1,29 +1,26 @@
 # 1662 압축
+# 메모리 초과
+# 어떻게 해결하면 좋을까? 길이만 알면 되니까 실제로 문자를 더하고 곱할 필요는 없지 않을까?
+# 메모리 초과가 나는 경우는 실제로 행위를 하지 않아도 될 수 있도록 정보를 같이 넣자.
 
-def sol(string,length,init_idx):
-    stack = []
-    for i in range(init_idx,length):
-        if string[i] == "(":
-            tmpString, startIdx = sol(string,length,init_idx+i+1)
-            stack.append(stack.pop()*tmpString)
-            break
-        elif string[i] == ")":
-            return ("".join(stack),init_idx+i+1)
+# 1662 압축
 
-        else:
-            stack.append(string[i])
+def sol():
+    string = input()
+    totalLength = 0
+    tmp = 0
+    stack=[]
+    for i in range(len(string)):
+        if string[i].isdigit():
+            totalLength += 1
+            tmp = string[i]
+        elif string[i] == "(":
+            stack.append((tmp,totalLength-1))
+            totalLength = 0
+        elif string[i] ==")":
+            multi,beforeLength=stack.pop()
+            totalLength = (int(multi)*totalLength)+beforeLength
+    print(totalLength)
 
+sol()
 
-
-
-
-
-
-
-    return
-
-
-
-if __name__ == "__main__" :
-    user_input = input()
-    sol(user_input,len(user_input),0)

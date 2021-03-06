@@ -315,11 +315,6 @@
  - [x] 프로그래머스 월간 코드 챌린지 [삼각 달팽이](https://programmers.co.kr/learn/courses/30/lessons/68645) 
  - [x] 삼각 달팽이 친구 사각 달팽이 [참조](http://jungol.co.kr/bbs/board.php?bo_table=pbank&wr_id=980&sca=20)
  
- 
- ### 9.17
- 
- --
- 
  ### 10.5
  - [x] 10799 쇠막대기
  

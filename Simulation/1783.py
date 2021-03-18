@@ -15,6 +15,7 @@ sol()
 
 N, M = map(int, input().split())
 if N == 1:
+
     scount = 1
 elif N == 2:
     scount = min(4, (M-1)//2 + 1)

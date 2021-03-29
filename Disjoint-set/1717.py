@@ -1,31 +1,42 @@
 # 1717 집합의 표현
-# simple Union으로 안되네 ㅋㅋ
-
 import sys
+input = sys.stdin.readline
 
 def find(node):
-    if s[node] == node :
-        return node
+    global nodes
+    while(nodes[node] != node):
+        node = nodes[node]
+    return node
 
-    else:
-        s[node] = s[s[node]]
-        return find(s[node])
+def merge(a,b):
+    global rank,nodes
+    a,b = find(a),find(b)
+    # 이미 같은 집합에 있는 경우
+    if a == b:
+        return
 
-n,m = map(int, sys.stdin.readline().split())
+    if rank[a] > rank[b]:
+        # 이렇게 하면 항상 b가 랭크가 크게 된다.
+        a,b = b,a
+    nodes[a] = b
 
-s = [i for i in range(0,n+1)]
+    if rank[a] == rank[b]:
+        rank[b] += 1
 
-for _ in range(m):
-    command,first,second = map(int, sys.stdin.readline().split())
+if __name__ == "__main__":
+    N, M = map(int, input().split())
+    nodes = [i for i in range(N + 1)]
+    rank = [i for i in range(N + 1)]
+    for i in range(M):
+        oper,a,b = map(int,input().split())
 
-    if command == 0:
-        #first의 부모는 second
-        s[first] = second
+        if oper == 0:
+            # Union
+            merge(a,b)
 
-
-    else:
-        if find(first) == find(second):
-            print("YES")
         else:
-            print("NO")
-
+            # find
+            if find(a) == find(b):
+                print("YES")
+            else:
+                print("NO")

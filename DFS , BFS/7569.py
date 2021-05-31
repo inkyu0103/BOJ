@@ -19,6 +19,9 @@ def bfs():
                 if Tomato[z][y][x] == 1 :
                     queue.append((z,y,x))
 
+    if len(queue) == 0:
+        print(-1)
+        return;
     lastPoint = queue[len(queue)-1]
 
     while queue:

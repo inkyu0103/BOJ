@@ -2,7 +2,7 @@
 import sys
 from collections import deque
 
-def dfs():
+def bfs():
     global Day
     queue = deque()
     for y in range(height):
@@ -12,8 +12,12 @@ def dfs():
                 queue.append((y,x))
 
 
+    if len(queue) == 0:
+        print(-1)
+        return;
 
     last = queue[len(queue)-1]
+
 
 
     while queue:
@@ -45,7 +49,7 @@ width , height = map(int,sys.stdin.readline().split())
 Tomato = [[int(i) for i in sys.stdin.readline().split()] for _ in range(height)]
 dirs = [(-1,0),(1,0),(0,-1),(0,1)]  # 상 하 좌 우
 Day = 0
-dfs()
+bfs()
 
 #인접 땅 정보
 '''

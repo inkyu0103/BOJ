@@ -21,8 +21,19 @@ def dfs(curNode,beforeNode):
 
     return True
 
-
-
+def bfs(curNode,parentNode):
+    q = deque([(curNode,parentNode)])
+    while(q):
+        cur,parent = q.popleft()
+        visit[cur] = 1
+        for nextNode in graph[cur]:
+            if nextNode == parent:
+                continue
+            elif visit[nextNode]:
+                return False
+            else:
+                q.append((nextNode,cur))
+    return True
 
 
 
@@ -47,7 +58,7 @@ if __name__ == "__main__":
             graph[e].append(s)
 
         for node in range(1, n + 1):
-            if not visit[node] and dfs(node,0):
+            if not visit[node] and bfs(node,0):
                 numTree += 1
 
         if numTree == 0:

@@ -19,15 +19,18 @@ def Prim():
         ret += minWeight[u]
         added[u] = 1
 
-        for v in graph[u]:
-            if not added[v] and minWeight[v] > graph[u][v]:
-                minWeight[v] = graph[u][v]
+        for v,dis in graph[u]:
+            print("v is {} dis is {}".format(v,dis))
+            if not added[v] and minWeight[v] > dis:
+                print("갱신 ! ")
+                minWeight[v] = dis
+                print(minWeight)
 
     return ret
 
 if __name__ =="__main__":
     N = int(input())
-    graph = [{} for _ in range(N)]
+    graph = [[] for _ in range(N)]
     Node = []
     added = [0] * N
     minWeight = [sys.maxsize] * N
@@ -38,31 +41,29 @@ if __name__ =="__main__":
         Node.append((x,y,z,idx))
 
     # 행성간 간선거리 입력
+    # x좌표 기준
     Node.sort(key=lambda x:x[0])
     for i in range(N-1):
         dis = dist(Node[i],Node[i+1])
-        graph[Node[i][3]][Node[i+1][3]] = dis
-        graph[Node[i+1][3]][Node[i][3]] = dis
+        graph[i].append((i+1,dis))
+        graph[i+1].append((i,dis))
 
-
+    # y좌표 기준
     Node.sort(key=lambda x:x[1])
     for i in range(N-1):
         dis = dist(Node[i],Node[i+1])
-        if Node[i+1][3] in graph[Node[i][3]]:
-            graph[Node[i][3]][Node[i+1][3]] = min(dis,graph[Node[i][3]][Node[i+1][3]])
-            graph[Node[i+1][3]][Node[i][3]] = min(dis,graph[Node[i][3]][Node[i+1][3]])
-        else:
-            graph[Node[i][3]][Node[i + 1][3]] = dis
+        graph[i].append((i+1,dis))
+        graph[i+1].append((i,dis))
 
-
+    # z좌표 기준
     Node.sort(key=lambda x:x[2])
     for i in range(N-1):
         dis = dist(Node[i],Node[i+1])
-        if Node[i+1][3] in graph[Node[i][3]]:
-            graph[Node[i][3]][Node[i+1][3]] = min(dis,graph[Node[i][3]][Node[i+1][3]])
-            graph[Node[i+1][3]][Node[i][3]] = min(dis,graph[Node[i][3]][Node[i+1][3]])
-        else:
-            graph[Node[i][3]][Node[i + 1][3]] = dis
+        graph[i].append((i+1,dis))
+        graph[i+1].append((i,dis))
+
+
+    print(graph)
 
     print(Prim())
 

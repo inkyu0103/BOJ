@@ -44,18 +44,3 @@ def dijkstra():
                 Time[nEd] = nTime
                 All[nEd].append([nTime,nCost])
                 heapq.heappush(q,[nTime,nCost,nEd])
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

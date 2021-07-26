@@ -1,42 +1,41 @@
 # 3055 탈출
+ '''
+주의해야 할 것. 각각 한 턴씩 움직일 수 있는가?
+고슴도치가 움직일 수 있는 범위에 대해서 움직인다 --> 물이 움직일 수 있는 범위에 대해서 움직인다.
+
+추가되는 부분에 대해서는 다음 분기에 처리해야한다.
+ '''
+
+
 import sys
 from collections import deque
 input = sys.stdin.readline
-dirs = [(0, 1), (1, 0), (-1, 0), (0, -1)]
 
 
-def bfs(start):
-    global graph
-    q = deque([start])
+def bfs():
 
-    while(q):
-        cur_r,cur_c = q.popleft()
-
-        for move in dirs:
-            nr,nc = cur_r+move[0],cur_c+move[1]
-
-            if 0<=nr<R and 0<=nc<C and graph[cur_r][cur_c] == "*":
-                q.append((nr,nc))
-                graph[nr][nc] = "*"
-            elif 0<=nr<R and 0<=nc<C and graph[cur_r][cur_c] == "S":
-                q.append((nr,nc))
-                graph[nr][nc] = "S"
 
 
 
 
 if __name__ =="__main__":
     R,C = map(int,input().split())
+    D,S,W = (-1,-1),(-1,-1),(-1,-1)
+    dirs = [(0,1),(0,-1),(1,0),(-1,0)]
+    visit = [[0]
+
     graph = []
-    a_start = (-1,-1)
-    w_start = (-1,-1)
-    for i in range(R):
-        tmp_val = list(input().strip())
-        if 'S' in tmp_val:
-            start = (i,tmp_val.index('S'))
-        elif '*' in tmp_val:
-            w_start = (i,tmp_val.index('*'))
-        graph.append(tmp_val)
+    for r in range(R):
+        tmp = list(input().strip())
+        for c in range(C):
+            if tmp[c] =="D":
+                D = (r,c)
+            elif tmp[c]== "*":
+                W = (r,c)
+            elif tmp[c] == "S":
+                S = (r,c)
+
+
 
 
 

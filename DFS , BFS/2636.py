@@ -1,66 +1,42 @@
-# 2636
-import sys
+# 2636번 치즈
 from collections import deque
-import copy
-input = sys.stdin.readline
 
-def findStart():
-    flag = 0
-    for r in range(R):
-        for c in range(C):
-            if tmp_graph[r][c]:
-                bfs((r,c))
-                start_point.append((r,c))
-                flag = 1
+dx = [-1, 0, 1, 0]
+dy = [0, -1, 0, 1]
+def find_air():
+    visited = [[False] * c for _ in range(r)]
 
-    if not flag:
-        return -1
+    q = deque()
+    q.append([0, 0])
+    visited[0][0] = True
+    cnt = 0
+    while q:
+        y, x = q.popleft()
 
+        for i in range(4):
+            ny = y + dy[i]
+            nx = x + dx[i]
+            if 0 <= ny < r and 0 <= nx < c and not visited[ny][nx]:
+                if board[ny][nx] == 0:
+                    visited[ny][nx] = True
+                    q.append([ny, nx])
+                elif board[ny][nx] == 1:
+                    board[ny][nx] = 0
+                    cnt += 1
+                    visited[ny][nx] = True
+    cheese.append(cnt)
+    return cnt
 
-def bfs(start):
-    q = deque([start])
-    while(q):
-        r,c = q.popleft()
-        tmp_graph[r][c] = 0
+r, c = map(int, input().split())
+board = [list(map(int, input().split())) for _ in range(r)]
+cheese = []
 
-        for move in dirs:
-            nr , nc = r + move[0] , c + move[1]
-            if 0<= nr <R and 0<= nc <C and tmp_graph[nr][nc]:
-                q.append((nr,nc))
+time = 0
+while True:
+    time += 1
+    cnt = find_air()
+    if cnt == 0:
+        break
 
-
-def special_bfs(start):
-    q = deque([start])
-    while(q):
-        r,c = q.popleft()
-
-        for move in dirs:
-            nr,nc = r+move[0] , c+move[1]
-            flag = 0
-
-            if 0<=nr<R and 0<=nc<C:
-                for m in dirs:
-                    #공기중 노출!
-                    if 0<=nr+m[0]<R and 0<= nc+m[1] < C and not graph[nr+m[0]][nc+m[1]]:
-                        flag = 1
-                        break
-                if flag == 1:
-                    # 현재 치즈 녹음
-                    q.append((nr,nc))
-
-                graph[r][c] = 0
-
-if __name__ == "__main__" :
-    dirs = [(0,1),(0,-1),(1,0),(-1,0)]
-    R,C = map(int,input().split())
-    graph= [list(map(int,input().split())) for _ in range(R)]
-    tmp_graph = copy.deepcopy(graph)
-
-    # 치즈 컴포넌트의 시작 --> findStart 하면 start_point의 길이가 곧 컴포넌트 개수
-    start_point = []
-    findStart()
-    # 이제 돌자
-    for s in start_point:
-        special_bfs(s)
-
-
+print(time-1)
+print(cheese[-2])

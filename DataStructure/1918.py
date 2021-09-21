@@ -1,34 +1,41 @@
-# 1918 후위 표기식
+# 1918 후위표기식
+import sys
+input = sys.stdin.readline
 
-def sol():
-    priority = {"*":1,"/":1,"-":2,"+":2}
-    stack =[]
-    exp = input()
-    answer =''
-    for i in range(len(exp)):
-        if 65<= ord(exp[i]) <=122:
-            answer += exp[i]
-        elif exp[i] == "(":
-            stack.append(exp[i])
-        elif exp[i] == ")":
-            # 올바른 식만 나온다는 가정하
-            while(stack[-1]!= "("):
-                answer += stack.pop()
-            # "(" 빼자
-            stack.pop()
-        else:
-            if len(stack) == 0 :
-                stack.append(exp[i])
+exp = input().strip()
+stack = []
+operator = {
+    '+':0,
+    '-':0,
+    '*':1,
+    '/':1,
+    '(':2,
+    ')':2
+}
+answer =''
 
-            elif stack[-1] =="(" or priority[stack[-1]] >= priority[exp[i]]:
-                stack.append(exp[i])
+for c in exp:
+    # c가 연산자인 경우
+    if c in operator:
+        # 스택이 비어있는 경우
+        if not stack or c == '(':
+            stack.append(c)
 
-            elif priority[stack[-1]] < priority[exp[i]]:
-                while(1):
-                    answer += stack.pop()
-                    if len(stack) == 0 or priority[stack[-1]] > priority[exp[i]]:
-                        break
-    while(stack):
-        answer += stack.pop()
-    return answer
-print(sol())
+        # ( stack and c!='c' + a) 자신이 들어오는 경우가 더 높은 경우
+        elif  operator[stack[-1]] < operator[c]:
+            stack.append(c)
+
+        # 자신이 들어오는 경우와 같거나 더 작은 경우
+        elif operator[stack[-1]] >= operator[c]:
+            while stack and
+
+
+
+
+
+    # 문자열인 경우
+    else:
+        answer += c
+
+
+print(answer)

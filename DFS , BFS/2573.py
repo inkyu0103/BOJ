@@ -6,6 +6,7 @@ input = sys.stdin.readline
 def sol():
     # year은 한 해가 지날 때마다 빙하를 없애준다.
     def year():
+        acc = [[0]*M for _ in range(N)]
         for r in range(N):
             for c in range(M):
                 if ocean[r][c]:
@@ -16,8 +17,12 @@ def sol():
                         if 0<= new_r <N and 0<=new_c<M and not ocean[new_r][new_c]:
                             count += 1
 
-                    ocean[r][c] = max(0,ocean[r][c]-count)
+                        acc[new_r][new_c] = count
 
+        for r in range(N):
+            for c in range(M):
+                if ocean[r][c]:
+                    ocean[r][c] = max(0,ocean[r][c]-acc[r][c])
 
     def is_glacier():
         flag = 0
@@ -32,7 +37,6 @@ def sol():
                     visit[r][c] = 1
 
                     while q:
-
                         r,c = q.popleft()
                         for dr,dc in dirs:
                             new_r,new_c = r+dr,c+dc
@@ -41,12 +45,12 @@ def sol():
                                 visit[new_r][new_c] = 1
                                 q.append([new_r,new_c])
 
+
                     for x in range(N):
                         for y in range(M):
                             # 만약 빙하는 있는데, 방문한 흔적이 없다면, segment가 2개 이상. 그러므로, 원하는 조건에 만족.
                             if ocean[x][y] and not visit[x][y]:
                                 return 1
-                    # 빙하는 있었고, 모두 다 방문한 경우
                     return 2
 
         # 빙하가 없네?
@@ -63,6 +67,8 @@ def sol():
     while 1:
         year()
         years += 1
+
+
         val = is_glacier()
 
         if not val :
@@ -75,4 +81,6 @@ def sol():
 
         elif val == 2:
             continue
+
+
 sol()

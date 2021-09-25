@@ -16,8 +16,7 @@ def sol():
                         new_r,new_c =r+dr,c+dc
                         if 0<= new_r <N and 0<=new_c<M and not ocean[new_r][new_c]:
                             count += 1
-
-                        acc[new_r][new_c] = count
+                    acc[r][c] = count
 
         for r in range(N):
             for c in range(M):
@@ -44,7 +43,6 @@ def sol():
                             if 0<=new_r<N and 0<=new_c<M and ocean[new_r][new_c] and not visit[new_r][new_c]:
                                 visit[new_r][new_c] = 1
                                 q.append([new_r,new_c])
-
 
                     for x in range(N):
                         for y in range(M):

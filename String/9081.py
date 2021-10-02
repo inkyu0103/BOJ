@@ -4,19 +4,30 @@ import sys
 input = sys.stdin.readline
 
 def sol():
+    def dfs(f,s,t):
+        # 종료 조건?
+        if first[f] == third[t] and second[s] != third[t]:
+            return dfs(f+1,s,t+1)
+
+        if first[f] != third[t] and second[s] == third[t]:
+            return dfs(f,s+1,t+1)
+
+        if first[f] == third[t] and second[s] == third[t]:
+            val1 = dfs(f+1,s,t+1)
+            val2 = dfs(f,s+1,t+1)
+
+            if val1 or val2:
+                return True
+
+            return False
+
     N = int(input())
-    arr = [input().rstrip() for _ in range(N)]
-    for c in arr:
-        box = set()
-        for t in permutations(c, len(c)):
-            box.add("".join(t))
 
-        list_box = list(box)
-        list_box.sort()
+    for _ in range(N):
 
-        if list_box.index(c) == len(list_box)-1:
-            print(c)
-        else:
-            print(list_box[list_box.index(c)+1])
+        first,second,third = map(str,input().strip().split())
+        result = dfs(0,0,0)
+        print(result)
+
 
 sol()

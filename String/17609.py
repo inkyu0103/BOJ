@@ -3,56 +3,59 @@ import sys
 input = sys.stdin.readline
 
 def sol():
+    # 투 포인터를 이용
+    def isPalin(l,r):
+        while l<r:
 
-    def isPalin(target):
-        length = len(target)
-        # 홀수 문자일 경우
-        if length % 2 and target[:length//2] == target[(length//2)+1:][::-1]:
-            return True
+            if word[l] != word[r]:
+                return False
 
-        # 짝수 문자일 경우
-        elif not length%2 and target[:length//2] == target[length//2:][::-1]:
-            return True
+            l+=1
+            r-=1
+        return True
 
-        else:
-            return False
 
-    def isLikePalin(target):
+    def isLikePalin(l,r,count):
+        while l<r:
+            if word[l] == word[r]:
+                l+=1
+                r-=1
+                continue
 
-        length = len(target)
-        # 홀수 문자일 경우
-        if length % 2 and target[:length // 2] == target[(length // 2) + 1:][::-1]:
-            return True
 
-        # 짝수 문자일 경우
-        elif not length % 2 and target[:length // 2] == target[length // 2:][::-1]:
-            return True
+            elif word[l] != word[r]:
+                if not count :
+                    val1 = isLikePalin(l+1,r,1)
+                    val2 = isLikePalin(l,r-1,1)
+                    if val1 or val2:
+                        return True
 
-        else:
-            return False
+                    else:
+                        return False
+                #  count
+                else:
+                  return False
+
+        return True
+
+
 
 
     tc = int(input())
-    words = [input().strip() for _ in range(tc)]
 
-    for word in words:
-        if isPalin(word):
+    for _ in range(tc):
+        word = input().strip()
+        word_length = len(word)
+
+        if isPalin(0,word_length-1):
+
             print(0)
             continue
 
-        flag = 0
-        for i in range(len(word)):
-            target = ''
+        if isLikePalin(0,word_length-1,0):
+            print(1)
+            continue
 
-            for j in range(len(word)):
-                if i != j:
-                    target += word[j]
+        print(2)
 
-            if isLikePalin(target):
-                flag = 1
-                print(1)
-                break
-
-        if not flag:
-            print(2)
 sol()

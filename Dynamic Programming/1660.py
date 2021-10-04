@@ -26,10 +26,4 @@ def sol():
 
     print(dp[N])
 
-
-
-
-
-
-
 sol()

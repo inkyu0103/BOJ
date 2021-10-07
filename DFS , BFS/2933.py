@@ -1,4 +1,4 @@
-#2933
+#2933 미네랄.
 
 import sys
 input = sys.stdin.readline

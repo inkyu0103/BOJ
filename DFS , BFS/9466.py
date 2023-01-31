@@ -1,51 +1,62 @@
 # 9466 텀 프로젝트
-"""
-사이클 여부 판단을 하는게 중요할 거 같은데..?
-<<<<<<< HEAD
-"""
-=======
-'''
 import sys
+
 input = sys.stdin.readline
 
-def sol():
-    tc = int(input())
+TC = int(input())
+for _ in range(TC):
+    N = int(input())
+    arr = [0] + list(map(int, input().split()))
+    visit = [0] * (N + 1)
 
-    for _ in range(tc):
-        already_grouped = set()
-        N = int(input())
-        selected = [0] + (list(map(int, input().split())))
+    node_type = {
+        "visited_node": 1,
+        "nocycle_node": 2,
+        "cycle_node": 3,
+    }
 
-        for i in range(1,N+1):
-            if selected[i] == i:
-                already_grouped.add(i)
+    for i in range(1, N + 1):
+        if arr[i] == i:
+            visit[i] = node_type["cycle_node"]
 
-        for i in range(1,N+1):
-            temp_visited = set()
-            next_node = selected[i]
+    answer = N + 1
 
-            # 자기 자신이 이미 소속된 아이라면 검사를 진행할 필요 없음
-            if i in already_grouped:
-                continue
+    def dfs(start):
+        # 다음 노드를 방문하지 않은 경우
+        if not visit[arr[start]]:
+            print(visit)
+            visit[start] = 1
+            val = dfs(arr[start])
 
-            while 1:
-                # 다음 타겟이 자기 자신인 경우 (2가지로 나뉨)
-                # 1. 자기가 자기를 선택한 경우
-                # 2. 자신을 포함한 사이클이 생기는 경우
-                if next_node == i:
-                    temp_visited.add(i+1)
-                    already_grouped = already_grouped.union(temp_visited)
-                    break
+            # 사이클을 다 찾고 내려오는 경우
+            if val == -1:
+                return -1
 
-                # 다음 타겟이 자기가 아닌 경우
-                # 1. 다음 타겟이 이미 temp_visited 에 포함된 경우 (곧바로 종료)
-                # 2. 그렇지 않은 경우 (next_node 갱신 + temp_visited에 넣기)
-                if next_node not in temp_visited and next_node not in already_grouped:
-                    temp_visited.add(next_node)
-                    next_node = selected[next_node]
-                else:
-                    break
+            # 사이클의 시작과 같은 노드인 경우
+            if val == start:
+                print(f"val is {val}, start is{start}")
+                visit[start] = 2
+                return -1
 
-        print(N-len(already_grouped))
-sol()
->>>>>>> 0d66d1a3a1007870ae778327019ad315588afd8e
+            # 사이클에 포함된 노드인 경우
+            if val != -1:
+                visit[start] = 2
+                return val
+        # 다음 노드가 이미 방문된 경우 -> 이게 어디서 문제가 되냐면, 아예 방문하지 않은 노드를 새롭게 방문할 때 문제가 발생. 예제 첫번째 예시에서는 7번 노드 방문할때 3이 이미 방문되어있음
+        else:
+            # 단순 방문 -> 사이클이 맞는지 아닌지 확인해봐야함
+            if visit[arr[start]] == node_type["visited_node"]:
+                visit[start] = 2
+                return arr[start]
+
+            # 사이클이 아닌 노드 경우 or 이미 사이클인 경우
+            else:
+                visit[arr[start]]
+                return -1
+
+    for i in range(1, N + 1):
+        if not visit[i]:
+            visit[i] = node_type["visited_node"]
+            dfs(i)
+
+    print(visit)

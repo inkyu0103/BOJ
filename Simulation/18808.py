@@ -27,6 +27,18 @@ for _ in range(K):
         rotate(g)
         is_rotate_essential = True
 
-    # 두 번씩 회전시키지 않아도 되는 경우는 총 3번 회전시켜볼 수 있다.
-    for _ in range(3):
-        a = 1
+    rotate_count = 1 if is_rotate_essential else 3
+    is_stick = True
+
+    while rotate_count:
+        for n in range(N - R):
+            for m in range(M - C):
+
+                # 스티커가 붙을 수 있는지 확인
+                for r in range(R):
+                    for c in range(C):
+                        if result[n + r][m + c] and g[r][c]:
+                            is_stick = False
+                            break
+
+                if is_stick:

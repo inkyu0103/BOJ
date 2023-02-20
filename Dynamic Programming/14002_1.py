@@ -1,33 +1,33 @@
-#14002_1 바이토닉 수열 재도전
+# 14002 가장 긴 증가하는 부분 수열 4
+import sys
 
-seqLength = int(input())
-seq = list(map(int,input().split()))
-rSeq = seq.copy()
-rSeq.reverse()
-Dp = [0]*seqLength
-reverseDp = [0]*seqLength
+input = sys.stdin.readline
 
-'''
-1 5 4 2 3 
+N = int(input())
+arr = [0] + list(map(int, input().split()))
+dp = [0] * 1001
+prev = [0] * (N + 1)
+answer = []
 
-3 2 4 5 1
-'''
 
-# 증가하는 가장 긴 수열
-for i in range(seqLength):
-    for j in range(i):
-        if seq[i]>seq[j] and Dp[i] < Dp[j]:
-            Dp[i]=Dp[j]
-    Dp[i]+=1
+for i in range(1, N + 1):
+    for j in range(i, -1, -1):
+        if arr[i] > arr[j] and dp[i] < dp[j] + 1:
+            dp[i] = dp[j] + 1
+            prev[i] = j
 
-for i in range(seqLength-1,-1,-1):
-    for j in range(seqLength-1,i,-1):
-        if seq[i]>seq[j] and reverseDp[i] < reverseDp[j]:
-            reverseDp[i] = reverseDp[j]
-    reverseDp[i] += 1
+maxi, maxd = 1, dp[1]
 
-result = []
-for i in range(seqLength):
-    result.append(Dp[i]+reverseDp[i]-1)
+for i in range(2, N + 1):
+    if maxd < dp[i]:
+        maxi = i
+        maxd = dp[i]
 
-print(max(result))
+cur = maxi
+
+while cur:
+    answer.append(arr[cur])
+    cur = prev[cur]
+
+print(len(answer))
+print(*reversed(answer))

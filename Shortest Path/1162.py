@@ -1,70 +1,52 @@
-# 1162
-
+# 1162 도로포장
 import sys
+from math import inf
+import heapq
+
 input = sys.stdin.readline
-INF = sys.maxsize
 
 
-def floyd():
-    for k in range(N):
-        for i in range(N):
-            for j in range(N):
-                if graph[i][j] > graph[i][k] + graph[k][j]:
-                    graph[i][j] = graph[i][k] + graph[k][j]
-                    route[i][j] = route[i][k]
+def solve():
+    q = [[0, 0, 1]]
 
-def findRoute():
-    start = 0
-    end = N-1
-    route_dp = [0]
-    while(1):
-        val  = route[start][end]
-        print(val)
-        if val == 0:
-            break
-        val -=1
-        start = val
-        route_dp.append(start)
+    while q:
+        cur_cost, pave_num, cur_node = heapq.heappop(q)
+        if cur_cost != dist[pave_num][cur_node]:
+            continue
 
-    return route_dp
+        for nxt_cost, nxt_pave_num, nxt_node in adj[cur_node]:
+            if pave_num + nxt_pave_num > K:
+                continue
+
+            if cur_cost + nxt_cost >= dist[pave_num + nxt_pave_num][nxt_node]:
+                continue
+
+            dist[nxt_pave_num + pave_num][nxt_node] = cur_cost + nxt_cost
+            heapq.heappush(q, [cur_cost + nxt_cost, pave_num + nxt_pave_num, nxt_node])
 
 
+N, M, K = map(int, input().split())
+dist = [[inf] * (N + 1) for _ in range(K + 1)]
+answer = inf
 
-def cal_time (target):
-    length = len(target)-1
-    dist = []
-    for i in range(length):
-        dist.append(graph[i][i+1])
+for i in range(K + 1):
+    dist[i][1] = 0
 
-    dist.sort()
-    print(dist)
-    for _ in range(K):
-        dist.pop()
+adj = [[] for _ in range(N + 1)]
 
-    print(dist)
-    return sum(dist)
+for _ in range(M):
+    s, e, c = map(int, input().split())
 
+    # 포장을 안하는 경우
+    adj[s].append([c, 0, e])
+    adj[e].append([c, 0, s])
 
+    # 포장을 하는 경우
+    adj[s].append([0, 1, e])
+    adj[e].append([0, 1, s])
 
-if __name__ == '__main__':
-    N,M,K = map(int,input().split())
-    graph = [[INF]*(N) for _ in range(N)]
-    route = [[0]*(N) for _ in range(N)]
+solve()
 
-    for i in range(N):
-        graph[i][i] = 0
-
-    for _ in range(M):
-        s,e,t = map(int,input().split())
-        graph[s-1][e-1] = t
-        graph[e-1][s-1] = t
-
-        route[s-1][e-1] = e
-        route[e-1][s-1] = s
-
-    floyd()
-    route_dp = findRoute()
-    print(cal_time(route_dp))
-
-
-
+for i in range(K + 1):
+    answer = min(answer, dist[i][N])
+print(answer)

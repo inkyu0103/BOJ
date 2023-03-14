@@ -5,16 +5,20 @@ input = sys.stdin.readline
 
 
 def rotate():
-    rotated_board = [[0] * N for _ in range(N)]
+    tmp = [[0] * N for _ in range(N)]
     for r in range(N):
         for c in range(N):
-            rotated_board[c][N - r - 1] = board[r][c]
-    return rotated_board
+            tmp[r][c] = board[r][c]
+
+    for r in range(N):
+        for c in range(N):
+            board[r][c] = tmp[N - 1 - c][r]
 
 
 def tilt(_dir):
     while _dir:
         rotate()
+        _dir -= 1
 
     for r in range(N):
         tilted = [0] * N
@@ -39,5 +43,19 @@ def tilt(_dir):
 
 N = int(input())
 init_board = [list(map(int, input().split())) for _ in range(N)]
-board = copy.deepcopy(init_board)
 mx = 0
+
+for tmp in range(1024):
+    board = copy.deepcopy(init_board)
+
+    brute = tmp
+    for d in range(5):
+        _dir = brute % 4
+        brute = brute // 4
+        tilt(_dir)
+
+    for r in range(N):
+        for c in range(N):
+            mx = max(mx, board[r][c])
+
+print(mx)

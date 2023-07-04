@@ -1,41 +1,44 @@
-# 1918 후위표기식
+# 1918 후위연산자
 import sys
+
 input = sys.stdin.readline
 
-exp = input().strip()
-stack = []
-operator = {
-    '+':0,
-    '-':0,
-    '*':1,
-    '/':1,
-    '(':2,
-    ')':2
-}
-answer =''
 
-for c in exp:
-    # c가 연산자인 경우
-    if c in operator:
-        # 스택이 비어있는 경우
-        if not stack or c == '(':
+def sol():
+    exp = list(input())
+    stack = []
+    answer = ""
+
+    for c in exp:
+        if c.isalpha():
+            answer += c
+            continue
+
+        if c == "(":
             stack.append(c)
+            continue
 
-        # ( stack and c!='c' + a) 자신이 들어오는 경우가 더 높은 경우
-        elif  operator[stack[-1]] < operator[c]:
+        if c == "*" or c == "/":
+            while stack and (stack[-1] == "*" or stack[-1] == "/"):
+                answer += stack.pop()
             stack.append(c)
+            continue
 
-        # 자신이 들어오는 경우와 같거나 더 작은 경우
-        elif operator[stack[-1]] >= operator[c]:
-            while stack and
+        if c == "+" or c == "-":
+            while stack and stack[-1] != "(":
+                answer += stack.pop()
+            stack.append(c)
+            continue
+
+        if c == ")":
+            while stack and stack[-1] != "(":
+                answer += stack.pop()
+            stack.pop()
+            continue
+    while stack:
+        answer += stack.pop()
+
+    print(answer)
 
 
-
-
-
-    # 문자열인 경우
-    else:
-        answer += c
-
-
-print(answer)
+sol()

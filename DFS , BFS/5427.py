@@ -3,79 +3,105 @@
 import sys
 from collections import deque
 
-
-def printMap(m):
-    for x in m:
-        print(*x)
+input = sys.stdin.readline
 
 
-# sys.stdin = open("./F.in", "r")
-input = sys.stdin
-INF = 10e9
-dh, dw = [1, 0, -1, 0], [0, 1, 0, -1]
+def find_sangun(ground):
+    for r in range(len(ground)):
+        for c in range(len(ground[0])):
+            if ground[r][c] == "@":
+                return [r, c]
 
-TC = int(input())
-for _ in range(TC):
-    W, H = map(int, input().split())
-    building = [list(input().strip()) for _ in range(H)]
 
-    queue1, queue2 = deque(), deque()
-    dist1, dist2 = [[INF] * W for _ in range(H)], [[INF] * W for _ in range(H)]
+def find_fire(ground):
+    fires = []
+    for r in range(len(ground)):
+        for c in range(len(ground[0])):
+            if ground[r][c] == "*":
+                fires.append([r, c])
+    return fires
 
-    # 불 먼저 돌리기
-    for h in range(H):
-        for w in range(W):
-            if building[h][w] == "*":
-                queue2.append([h, w])
-                dist2[h][w] = 0
 
-    while queue2:
-        cur_h, cur_w = queue2.pop()
+def is_inbound(cur_r, cur_c, r, c):
+    return 0 <= cur_r < r and 0 <= cur_c < c
 
-        for i in range(4):
-            new_h, new_w = cur_h + dh[i], cur_w + dw[i]
 
-            if (
-                0 <= new_h < H
-                and 0 <= new_w < W
-                and dist2[new_h][new_w] == INF
-                and building[new_h][new_w] != "#"
-            ):
-                dist2[new_h][new_w] = min(dist2[cur_h][cur_w] + 1, dist2[new_h][new_w])
-                queue2.append([new_h, new_w])
+def sol():
+    tc = int(input())
+    dirs = [[0, 1], [0, -1], [1, 0], [-1, 0]]
 
-    # printMap(dist2)
+    for _ in range(tc):
+        is_escape = False
+        escape_time = -1
+        fire_queue = deque()
+        sangun_queue = deque()
+        c, r = map(int, input().split())
+        ground = [list(input().rstrip()) for _ in range(r)]
 
-    # 사람
-    for h in range(H):
-        for w in range(W):
-            if building[h][w] == "@":
-                queue1.append([h, w])
-                dist1[h][w] = 0
+        # 불이 이동하는 지도
+        f_visit = [[0] * c for _ in range(r)]
 
-    isExit = False
-    answer = -1
+        # 상근이가 이동하는 지도
+        s_visit = [[0] * c for _ in range(r)]
 
-    while queue1:
-        cur_h, cur_w = queue1.pop()
+        # 불 먼저 이동 시키기
+        fire_starts = find_fire(ground)
 
-        for i in range(4):
-            new_h, new_w = cur_h + dh[i], cur_w + dw[i]
+        for start in fire_starts:
+            f_visit[start[0]][start[1]] = 1
+            fire_queue.append(start)
 
-            if new_h < 0 or new_h >= H or new_w < 0 or new_w >= W:
-                answer = dist1[cur_h][cur_w]
-                isExit = True
-                break
+        while fire_queue:
+            cur_r, cur_c = fire_queue.popleft()
 
-            if (
-                dist2[new_h][new_w] > dist1[cur_h][cur_w] + 1
-                and building[new_h][new_w] != "#"
-                and dist1[new_h][new_w] == INF
-            ):
-                queue1.append([new_h, new_w])
-                dist1[new_h][new_w] = dist1[cur_h][cur_w] + 1
+            for dr, dc in dirs:
+                new_r, new_c = cur_r + dr, cur_c + dc
 
-        if isExit:
-            break
+                if not is_inbound(new_r, new_c, r, c):
+                    continue
 
-    print(answer + 1 if isExit else "IMPOSSIBLE")
+                if ground[new_r][new_c] == "#":
+                    continue
+
+                if f_visit[new_r][new_c]:
+                    continue
+
+                f_visit[new_r][new_c] = f_visit[cur_r][cur_c] + 1
+                fire_queue.append([new_r, new_c])
+
+        # 상근이 움직이기
+        sangun_start = find_sangun(ground)
+        s_visit[sangun_start[0]][sangun_start[1]] = 1
+
+        sangun_queue.append(sangun_start)
+
+        while sangun_queue and not is_escape:
+            cur_r, cur_c = sangun_queue.popleft()
+
+            for dr, dc in dirs:
+                new_r, new_c = cur_r + dr, cur_c + dc
+
+                # 만약 배열의 범위를 벗어난 경우 -> 탈출에 성공함. 따라서 break
+                if not is_inbound(new_r, new_c, r, c):
+                    is_escape = True
+                    escape_time = s_visit[cur_r][cur_c] + 1
+                    break
+
+                if ground[new_r][new_c] == "#":
+                    continue
+                if s_visit[new_r][new_c]:
+                    continue
+
+                if (
+                    f_visit[new_r][new_c]
+                    and f_visit[new_r][new_c] <= s_visit[cur_r][cur_c] + 1
+                ):
+                    continue
+
+                s_visit[new_r][new_c] = s_visit[cur_r][cur_c] + 1
+                sangun_queue.append([new_r, new_c])
+
+        print(escape_time - 1 if escape_time != -1 else "IMPOSSIBLE")
+
+
+sol()

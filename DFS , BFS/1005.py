@@ -15,7 +15,7 @@ def sol():
         costs = [0] + list(map(int, input().split()))
         cumulative_costs = copy.deepcopy(costs)
         graph = [[] for _ in range(N + 1)]
-        answer = -1
+        answer = 0
 
         # 간선 정보를 거꾸로 등록
         for _ in range(K):
@@ -25,23 +25,29 @@ def sol():
         target_building = int(input())
 
         # 타겟 빌딩부터 시작
-        q = deque([[target_building, costs[target_building]]])
+        q = deque()
+        q.append(target_building)
 
         while q:
-            cur_building, cur_cost = q.popleft()
+            cur_building = q.popleft()
 
-            # 더 이상 진행할 노드가 없는 경우
             if not graph[cur_building]:
-                answer = max(answer, cur_cost)
+                answer = max(answer, cumulative_costs[cur_building])
                 continue
 
             # 진행할 건물이 있는 경우
             for next_building in graph[cur_building]:
-                if cur_cost + costs[next_building] > cumulative_costs[next_building]:
-                    q.append([next_building, cur_cost + costs[next_building]])
-                    cumulative_costs[next_building] = cur_cost + costs[next_building]
+                if (
+                    cumulative_costs[cur_building] + costs[next_building]
+                    > cumulative_costs[next_building]
+                ):
+                    cumulative_costs[next_building] = (
+                        cumulative_costs[cur_building] + costs[next_building]
+                    )
 
-        print(answer if answer != -1 else 0)
+                    q.append(next_building)
+
+        print(answer)
 
 
 sol()
